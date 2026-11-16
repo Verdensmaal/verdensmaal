@@ -27,7 +27,6 @@ node scripts/check-pages.mjs   # every page/post of the old WP API exists in _si
 - `src/wp-content/uploads/` – images and documents, same URLs as on the old site.
 - `src/assets/` – theme CSS, fonts, `js/navigation.js` (mobile menu / sub-menu toggles).
 - `scripts/import-wp.mjs` – one-off WordPress migration, kept for reference only. The generated files are now the source of truth.
-- `staticwebapp.config.json` – Azure Static Web Apps routing (404 page, redirects of old WP paths).
 
 ## Add or edit a page
 
@@ -49,21 +48,23 @@ node scripts/check-pages.mjs   # every page/post of the old WP API exists in _si
 Set `subpages: true` in the front matter to append an automatic list of the page's menu children under the content.
 A new blog post goes in `src/posts/` with `layout: "layouts/post.njk"` and a `date`.
 
-## Deploy to Azure Static Web Apps (Free plan)
+## Deploy (GitHub Pages)
 
-1. Azure portal: create a **Static Web App**, plan type **Free**, deployment source **GitHub**, pick this repository and branch `main`.
-   Build preset **Custom**: app location `/`, output location `_site`. Azure then adds its own workflow and secret.
-2. Alternatively use the included `.github/workflows/azure-static-web-apps.yml`: create the Static Web App with source "Other",
-   copy its deployment token into the GitHub repository secret `AZURE_STATIC_WEB_APPS_API_TOKEN`, and push to `main`.
-   Pull requests get a preview environment that is closed when the PR is closed.
+Every push to `main` builds the site and publishes it with `.github/workflows/pages.yml`
+(repository **Settings → Pages → Source: GitHub Actions**). The repository must stay public, because the
+organisation is on GitHub's free plan.
+
+Azure Static Web Apps was tried first, but it rejects domains containing æ/ø/å, in both the Unicode and punycode forms.
 
 ## Custom domain
 
-The domain is `verdensmålihverdagsliv.dk` (punycode `xn--verdensmlihverdagsliv-z2b.dk`). In the Static Web App open
-**Custom domains → Add**:
+The domain is `verdensmålihverdagsliv.dk` (punycode `xn--verdensmlihverdagsliv-z2b.dk`), with DNS at Simply.com.
+**Settings → Pages → Custom domain** is set to the apex domain (punycode form). Its DNS records:
 
-- `www.xn--verdensmlihverdagsliv-z2b.dk`: add a **CNAME** record pointing to the app's `*.azurestaticapps.net` hostname.
-- Apex (`xn--verdensmlihverdagsliv-z2b.dk`): choose "TXT record validation", add the TXT record Azure shows, then
-  point the apex at the app (ALIAS/ANAME at the DNS provider, or the A record Azure displays after validation).
+| Type  | Name | Value |
+| ----- | ---- | ----- |
+| A     | @    | 185.199.108.153, 185.199.109.153, 185.199.110.153, 185.199.111.153 |
+| AAAA  | @    | 2606:50c0:8000::153, 2606:50c0:8001::153, 2606:50c0:8002::153, 2606:50c0:8003::153 |
+| CNAME | www  | verdensmaal.github.io |
 
-Use the punycode form when entering names in Azure/DNS. Lower the TTL before switching, and keep the old host running until the new site validates.
+GitHub issues the HTTPS certificate automatically once DNS resolves. `www` redirects to the apex.

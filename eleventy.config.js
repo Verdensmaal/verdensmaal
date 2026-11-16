@@ -22,7 +22,6 @@ function findItem(items, url) {
 export default function (eleventyConfig) {
   eleventyConfig.addPassthroughCopy("src/wp-content");
   eleventyConfig.addPassthroughCopy("src/assets");
-  eleventyConfig.addPassthroughCopy({ "staticwebapp.config.json": "staticwebapp.config.json" });
 
   eleventyConfig.addFilter("menuState", (menu, url) => markMenu(menu, url));
   eleventyConfig.addFilter("menuChildren", (menu, url) => {
