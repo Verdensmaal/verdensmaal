@@ -1,0 +1,29 @@
+---
+layout: layouts/base.njk
+bodyClass: post-template-default single single-post single-format-standard
+---
+<article id="post-{{ wpId }}" class="post-{{ wpId }} post type-post status-publish format-standard hentry">
+	<header class="entry-header">
+		<h1 class="entry-title">{{ title }}</h1>
+	</header><!-- .entry-header -->
+
+	<div class="entry-content">
+		{{ content | safe }}
+	</div><!-- .entry-content -->
+
+	<footer class="entry-footer">
+		{% if author %}<span class="byline"><span class="author vcard"><span class="screen-reader-text">Forfatter </span> {{ author }}</span></span>{% endif %}<span class="posted-on"><span class="screen-reader-text">Udgivet </span><a href="{{ page.url }}" rel="bookmark"><time class="entry-date published" datetime="{{ page.date | isoDate }}">{{ page.date | dkDate }}</time></a></span>
+	</footer><!-- .entry-footer -->
+</article><!-- #post-{{ wpId }} -->
+
+{%- set prev = collections.posts | getPreviousCollectionItem(page) %}
+{%- set next = collections.posts | getNextCollectionItem(page) %}
+{%- if prev or next %}
+<nav class="navigation post-navigation" aria-label="Indlægsnavigation">
+	<h2 class="screen-reader-text">Indlægsnavigation</h2>
+	<div class="nav-links">
+		{%- if prev %}<div class="nav-previous"><a href="{{ prev.url }}" rel="prev"><span class="meta-nav" aria-hidden="true">Forrige</span> <span class="screen-reader-text">Forrige indlæg:</span> <span class="post-title">{{ prev.data.title }}</span></a></div>{% endif %}
+		{%- if next %}<div class="nav-next"><a href="{{ next.url }}" rel="next"><span class="meta-nav" aria-hidden="true">Næste</span> <span class="screen-reader-text">Næste indlæg:</span> <span class="post-title">{{ next.data.title }}</span></a></div>{% endif %}
+	</div>
+</nav>
+{%- endif %}

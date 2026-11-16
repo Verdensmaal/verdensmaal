@@ -1,0 +1,22 @@
+{#- Recursive menu renderer; markup mirrors WordPress' wp_nav_menu() as used by Twenty Sixteen. -#}
+{% macro renderItems(items, sub) %}
+<ul{% if sub %} class="sub-menu"{% endif %}>
+{%- for item in items %}
+	<li class="menu-item{% if item.children.length %} menu-item-has-children{% endif %}{% if item.current %} current-menu-item{% endif %}{% if item.ancestor %} current-menu-ancestor current-menu-parent{% endif %}"><a href="{{ item.url }}"{% if item.current %} aria-current="page"{% endif %}>{{ item.title }}</a>
+	{%- if item.children.length %}
+{{ renderItems(item.children, true) }}
+	{%- endif %}</li>
+{%- endfor %}
+</ul>
+{% endmacro %}
+
+{% macro renderMenu(items, id) %}
+<div class="menu-top-menu-container"><ul{% if id %} id="{{ id }}"{% endif %} class="primary-menu">
+{%- for item in items %}
+	<li class="menu-item{% if item.children.length %} menu-item-has-children{% endif %}{% if item.current %} current-menu-item{% endif %}{% if item.ancestor %} current-menu-ancestor current-menu-parent{% endif %}"><a href="{{ item.url }}"{% if item.current %} aria-current="page"{% endif %}>{{ item.title }}</a>
+	{%- if item.children.length %}
+{{ renderItems(item.children, true) }}
+	{%- endif %}</li>
+{%- endfor %}
+</ul></div>
+{% endmacro %}

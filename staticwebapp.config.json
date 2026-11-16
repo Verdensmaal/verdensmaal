@@ -1,0 +1,19 @@
+{
+  "routes": [
+    { "route": "/feed/*", "redirect": "/", "statusCode": 301 },
+    { "route": "/comments/feed/*", "redirect": "/", "statusCode": 301 },
+    { "route": "/wp-admin/*", "redirect": "/", "statusCode": 301 },
+    { "route": "/wp-login.php", "redirect": "/", "statusCode": 301 },
+    { "route": "/xmlrpc.php", "redirect": "/", "statusCode": 301 }
+  ],
+  "responseOverrides": {
+    "404": {
+      "rewrite": "/404.html"
+    }
+  },
+  "mimeTypes": {
+    ".woff2": "font/woff2",
+    ".woff": "font/woff",
+    ".docx": "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+  }
+}

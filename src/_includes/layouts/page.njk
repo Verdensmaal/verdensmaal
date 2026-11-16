@@ -1,0 +1,42 @@
+---
+layout: layouts/base.njk
+bodyClass: page-template-default page
+---
+{%- if blog -%}
+<header>
+	<h1 class="page-title screen-reader-text">{{ title }}</h1>
+</header>
+{% for post in collections.posts | reverse %}
+<article id="post-{{ post.data.wpId }}" class="post-{{ post.data.wpId }} post type-post status-publish format-standard hentry">
+	<header class="entry-header">
+		<h2 class="entry-title"><a href="{{ post.url }}" rel="bookmark">{{ post.data.title }}</a></h2>
+	</header><!-- .entry-header -->
+	<div class="entry-content">
+		{% if post.data.description %}<p>{{ post.data.description }}</p>{% endif %}
+	</div><!-- .entry-content -->
+	<footer class="entry-footer">
+		<span class="posted-on"><span class="screen-reader-text">Udgivet </span><a href="{{ post.url }}" rel="bookmark"><time class="entry-date published" datetime="{{ post.date | isoDate }}">{{ post.date | dkDate }}</time></a></span>
+	</footer><!-- .entry-footer -->
+</article>
+{% endfor %}
+{%- else -%}
+<article id="post-{{ wpId }}" class="post-{{ wpId }} page type-page status-publish hentry">
+	<header class="entry-header">
+		<h1 class="entry-title">{{ title }}</h1>
+	</header><!-- .entry-header -->
+
+	<div class="entry-content">
+		{{ content | safe }}
+		{%- if subpages %}
+		{% set children = menu | menuChildren(page.url) %}
+		{%- if children.length %}
+		<ul class="subpage-list">
+			{%- for child in children %}
+			<li><a href="{{ child.url }}">{{ child.title }}</a></li>
+			{%- endfor %}
+		</ul>
+		{%- endif %}
+		{%- endif %}
+	</div><!-- .entry-content -->
+</article><!-- #post-{{ wpId }} -->
+{%- endif %}
